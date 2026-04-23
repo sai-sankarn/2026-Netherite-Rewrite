@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file
 // at the root directory of this project.
 
-package frc.robot.generated;
+package org.team4639.frc2026.generated;
 
 import static edu.wpi.first.units.Units.*;
 
