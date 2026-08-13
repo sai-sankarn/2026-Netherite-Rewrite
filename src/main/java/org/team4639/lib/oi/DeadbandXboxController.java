@@ -81,7 +81,6 @@ public class DeadbandXboxController extends CommandXboxController {
       // Detect rising edge (button just pressed)
       if (isPressed && !previouslyPressed) {
         double currentTime = Timer.getFPGATimestamp();
-        double timeSinceLastClick = currentTime - lastClickTime.get(trigger);
 
         // Update last click time
         lastClickTime.put(trigger, currentTime);
