@@ -20,11 +20,11 @@ public class Rollers extends SubsystemBase {
   }
 
   public void handleIntaking() {
-    leftMotor.setVoltage(6);
+    leftMotor.setVoltage(-6);
   }
 
   public void handleOuttaking() {
-    leftMotor.setVoltage(-6);
+    leftMotor.setVoltage(6);
   }
 
   public void stop() {

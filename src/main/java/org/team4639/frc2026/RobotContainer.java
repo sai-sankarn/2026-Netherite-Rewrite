@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.team4639.frc2026.commands.DriveCommands;
+import org.team4639.frc2026.constants.ports.Netherite;
 import org.team4639.frc2026.generated.TunerConstants;
 import org.team4639.frc2026.subsystems.drive.Drive;
 import org.team4639.frc2026.subsystems.drive.GyroIO;
@@ -22,6 +23,9 @@ import org.team4639.frc2026.subsystems.drive.GyroIOPigeon2;
 import org.team4639.frc2026.subsystems.drive.ModuleIO;
 import org.team4639.frc2026.subsystems.drive.ModuleIOSim;
 import org.team4639.frc2026.subsystems.drive.ModuleIOTalonFX;
+import org.team4639.frc2026.subsystems.extension.Extension;
+import org.team4639.frc2026.subsystems.rollers.Rollers;
+import org.team4639.frc2026.subsystems.spindexer.Spindexer;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -32,6 +36,9 @@ import org.team4639.frc2026.subsystems.drive.ModuleIOTalonFX;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+  private final Rollers rollers = new Rollers(Netherite.portConfiguration);
+  private final Extension extension = new Extension(Netherite.portConfiguration);
+  private final Spindexer spindexer = new Spindexer(Netherite.portConfiguration);
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -133,6 +140,11 @@ public class RobotContainer {
             () -> -controller.getLeftY(),
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
+
+    controller.a().whileTrue(rollers.runIntakeCommand());
+    controller.x().whileTrue(rollers.stopIntakeCommand());
+    controller.b().onTrue(extension.extendToEnd());
+    controller.y().onTrue(extension.retractToEnd().alongWith(rollers.stopIntakeCommand()));
   }
 
   /**

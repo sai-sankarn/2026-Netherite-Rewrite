@@ -7,11 +7,11 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.team4639.frc2026.util.PortConfiguration;
-import org.team4639.lib.util.Phoenix6Factory;
 import org.team4639.lib.util.PhoenixUtil;
 
 public class Extension extends SubsystemBase {
@@ -29,13 +29,13 @@ public class Extension extends SubsystemBase {
   private static final double MAX_ACCELERATION = 40.0; // rotations/sec^2
 
   // Position tolerance in motor rotations.
-  private static final double POSITION_TOLERANCE = 0.05;
+  private static final double POSITION_TOLERANCE = 1;
 
-  private static final double RETRACTED_POSITION = -6.997559;
-  private static final double EXTENDED_POSITION = 13.665527;
+  private static final double RETRACTED_POSITION = 1.01171875;
+  private static final double EXTENDED_POSITION = 19.9404296875;
 
   public Extension(PortConfiguration ports) {
-    extensionMotor = Phoenix6Factory.createDefaultTalon(ports.IntakeExtensionMotorID, false);
+    extensionMotor = new TalonFX(ports.IntakeExtensionMotorID.getDeviceNumber());
 
     // Current limits
     config.CurrentLimits.SupplyCurrentLimit = 20;
@@ -50,7 +50,7 @@ public class Extension extends SubsystemBase {
 
     PhoenixUtil.tryUntilOk(5, () -> extensionMotor.getConfigurator().apply(config));
 
-    extensionMotor.setNeutralMode(NeutralModeValue.Brake);
+    extensionMotor.setNeutralMode(NeutralModeValue.Coast);
   }
 
   /** Extend using open-loop voltage. */
@@ -69,10 +69,16 @@ public class Extension extends SubsystemBase {
   }
 
   /** Command that moves the extension to a position and finishes when it reaches that position. */
-  public Command moveToPosition(double position) {
-    return Commands.run(() -> setPosition(position), this)
-        .until(() -> Math.abs(getPosition() - position) < POSITION_TOLERANCE)
-        .andThen(this::stop);
+  public Command moveToPosition(double position, boolean extending) {
+    if (extending) {
+      return Commands.run(this::extend, this)
+          .until(() -> Math.abs(getPosition() - position) < POSITION_TOLERANCE)
+          .andThen(this::stop);
+    } else {
+      return Commands.run(this::retract, this)
+          .until(() -> Math.abs(getPosition() - position) < POSITION_TOLERANCE)
+          .andThen(this::stop);
+    }
   }
 
   /**
@@ -81,7 +87,7 @@ public class Extension extends SubsystemBase {
    * <p>Replace this with your actual maximum safe motor position.
    */
   public Command extendToEnd() {
-    return moveToPosition(EXTENDED_POSITION);
+    return moveToPosition(EXTENDED_POSITION, true);
   }
 
   /**
@@ -90,7 +96,7 @@ public class Extension extends SubsystemBase {
    * <p>Replace this with your actual minimum safe motor position.
    */
   public Command retractToEnd() {
-    return moveToPosition(RETRACTED_POSITION);
+    return moveToPosition(RETRACTED_POSITION, false);
   }
 
   /** Run the motor at a specific voltage. */
@@ -126,5 +132,12 @@ public class Extension extends SubsystemBase {
   /** Get motor voltage. */
   public double getVoltage() {
     return extensionMotor.getMotorVoltage().getValueAsDouble();
+  }
+
+  public void periodic() {
+    SmartDashboard.putNumber("Extension Position", this.getPosition());
+    SmartDashboard.putNumber("Extension Goal Difference", getPosition() - EXTENDED_POSITION);
+    SmartDashboard.putBoolean(
+        "Extended", Math.abs(getPosition() - EXTENDED_POSITION) < POSITION_TOLERANCE);
   }
 }
