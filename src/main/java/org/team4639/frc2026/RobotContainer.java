@@ -24,7 +24,9 @@ import org.team4639.frc2026.subsystems.drive.ModuleIO;
 import org.team4639.frc2026.subsystems.drive.ModuleIOSim;
 import org.team4639.frc2026.subsystems.drive.ModuleIOTalonFX;
 import org.team4639.frc2026.subsystems.extension.Extension;
+import org.team4639.frc2026.subsystems.kicker.Kicker;
 import org.team4639.frc2026.subsystems.rollers.Rollers;
+import org.team4639.frc2026.subsystems.shooter.Shooter;
 import org.team4639.frc2026.subsystems.spindexer.Spindexer;
 
 /**
@@ -39,6 +41,8 @@ public class RobotContainer {
   private final Rollers rollers = new Rollers(Netherite.portConfiguration);
   private final Extension extension = new Extension(Netherite.portConfiguration);
   private final Spindexer spindexer = new Spindexer(Netherite.portConfiguration);
+  private final Kicker kicker = new Kicker(Netherite.portConfiguration);
+  private final Shooter shooter = new Shooter(Netherite.portConfiguration);
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -141,10 +145,13 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    controller.a().whileTrue(rollers.runIntakeCommand());
+    // controller.a().whileTrue(rollers.runIntakeCommand());
+    controller.a().whileTrue(spindexer.spinCommand()).whileFalse(spindexer.stopCommand());
     controller.x().whileTrue(rollers.stopIntakeCommand());
     controller.b().onTrue(extension.extendToEnd());
     controller.y().onTrue(extension.retractToEnd().alongWith(rollers.stopIntakeCommand()));
+    controller.povUp().whileTrue(kicker.runKicker()).whileFalse(kicker.idle());
+    controller.povDown().whileTrue(shooter.runShooterCommand());
   }
 
   /**
