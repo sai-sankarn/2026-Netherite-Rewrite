@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.team4639.frc2026.commands.DriveCommands;
+import org.team4639.frc2026.commands.SuperstructureCommands;
 import org.team4639.frc2026.constants.ports.Netherite;
 import org.team4639.frc2026.generated.TunerConstants;
 import org.team4639.frc2026.subsystems.drive.Drive;
@@ -145,13 +146,13 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    // controller.a().whileTrue(rollers.runIntakeCommand());
-    controller.a().whileTrue(spindexer.spinCommand()).whileFalse(spindexer.stopCommand());
-    controller.x().whileTrue(rollers.stopIntakeCommand());
-    controller.b().onTrue(extension.extendToEnd());
-    controller.y().onTrue(extension.retractToEnd().alongWith(rollers.stopIntakeCommand()));
-    controller.povUp().whileTrue(kicker.runKicker()).whileFalse(kicker.idle());
-    controller.povDown().whileTrue(shooter.runShooterCommand());
+    controller.rightTrigger().whileTrue(SuperstructureCommands.shootCommand(shooter, kicker, spindexer));
+    controller.x().onTrue(extension.extendToEnd());
+    controller.y().onTrue(extension.retractToEnd());
+    controller.a().onTrue(rollers.runIntakeCommand());
+    controller.b().onTrue(rollers.stopIntakeCommand());
+    
+    
   }
 
   /**
