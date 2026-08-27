@@ -38,12 +38,12 @@ import org.team4639.frc2026.subsystems.spindexer.Spindexer;
  */
 public class RobotContainer {
   // Subsystems
-  private final Drive drive;
-  private final Rollers rollers = new Rollers(Netherite.portConfiguration);
-  private final Extension extension = new Extension(Netherite.portConfiguration);
-  private final Spindexer spindexer = new Spindexer(Netherite.portConfiguration);
-  private final Kicker kicker = new Kicker(Netherite.portConfiguration);
-  private final Shooter shooter = new Shooter(Netherite.portConfiguration);
+  public final Drive drive;
+  public final Rollers rollers = new Rollers(Netherite.portConfiguration);
+  public final Extension extension = new Extension(Netherite.portConfiguration);
+  public final Spindexer spindexer = new Spindexer(Netherite.portConfiguration);
+  public final Kicker kicker = new Kicker(Netherite.portConfiguration);
+  public final Shooter shooter = new Shooter(Netherite.portConfiguration);
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);

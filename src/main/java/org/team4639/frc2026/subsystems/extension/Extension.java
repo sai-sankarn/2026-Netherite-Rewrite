@@ -31,8 +31,8 @@ public class Extension extends SubsystemBase {
   // Position tolerance in motor rotations.
   private static final double POSITION_TOLERANCE = 1;
 
-  private static final double RETRACTED_POSITION = 1.01171875;
-  private static final double EXTENDED_POSITION = 19.9404296875;
+  private static final double RETRACTED_POSITION = 0;
+  private static final double EXTENDED_POSITION = 18.9287109375;
 
   public Extension(PortConfiguration ports) {
     extensionMotor = new TalonFX(ports.IntakeExtensionMotorID.getDeviceNumber());
@@ -80,6 +80,19 @@ public class Extension extends SubsystemBase {
           .andThen(this::stop);
     }
   }
+
+public Command home() {
+  return Commands.run(this::retract, this)
+      .until(() -> getCurrent() >= 10)
+      .withTimeout(3.0)
+      .andThen(
+          Commands.runOnce(
+              () -> {
+                stop();
+                extensionMotor.setPosition(0.0);
+              },
+              this));
+}
 
   /**
    * Command to fully extend.
