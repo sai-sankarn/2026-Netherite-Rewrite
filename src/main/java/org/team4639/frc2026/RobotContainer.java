@@ -29,6 +29,7 @@ import org.team4639.frc2026.subsystems.kicker.Kicker;
 import org.team4639.frc2026.subsystems.rollers.Rollers;
 import org.team4639.frc2026.subsystems.shooter.Shooter;
 import org.team4639.frc2026.subsystems.spindexer.Spindexer;
+import org.team4639.frc2026.subsystems.turret.Turret;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -44,6 +45,7 @@ public class RobotContainer {
   public final Spindexer spindexer = new Spindexer(Netherite.portConfiguration);
   public final Kicker kicker = new Kicker(Netherite.portConfiguration);
   public final Shooter shooter = new Shooter(Netherite.portConfiguration);
+  public final Turret turret = new Turret(Netherite.portConfiguration);
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -146,13 +148,16 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    controller.rightTrigger().whileTrue(SuperstructureCommands.shootCommand(shooter, kicker, spindexer));
+    controller
+        .rightTrigger()
+        .whileTrue(SuperstructureCommands.shootCommand(shooter, kicker, spindexer));
     controller.x().onTrue(extension.extendToEnd());
     controller.y().onTrue(extension.retractToEnd());
     controller.a().onTrue(rollers.runIntakeCommand());
     controller.b().onTrue(rollers.stopIntakeCommand());
-    
-    
+    controller.povRight().whileTrue(turret.moveRight());
+    controller.povLeft().whileTrue(turret.moveLeft());
+    controller.rightStick().onTrue(extension.home());
   }
 
   /**

@@ -126,11 +126,10 @@ public class Robot extends LoggedRobot {
       autonomousCommand.cancel();
     }
 
-    if (DriverStation.isEnabled()&&!intakeHomed){
+    if (DriverStation.isEnabled() && !intakeHomed) {
       CommandScheduler.getInstance().schedule(robotContainer.extension.home());
-      intakeHomed=true;
+      intakeHomed = true;
     }
-    
   }
 
   /** This function is called periodically during operator control. */
