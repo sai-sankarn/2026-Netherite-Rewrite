@@ -83,7 +83,7 @@ public class Extension extends SubsystemBase {
 
   public Command home() {
     return Commands.run(this::retract, this)
-        .until(() -> getCurrent() >= 10)
+        .until(() -> getCurrent() >= 50)
         .withTimeout(3.0)
         .andThen(
             Commands.runOnce(
