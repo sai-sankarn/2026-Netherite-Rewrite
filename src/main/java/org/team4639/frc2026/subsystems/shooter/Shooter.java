@@ -50,6 +50,13 @@ public class Shooter extends SubsystemBase {
         });
   }
 
+  public Command runShootCalculatedCommand() {
+    return run(
+        () -> {
+          rightMotor.setVoltage(LookupTables.getScoringRPM() / 565);
+        });
+  }
+
   public Command stopShooterCommand() {
     return run(() -> rightMotor.stopMotor());
   }

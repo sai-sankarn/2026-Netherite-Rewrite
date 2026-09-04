@@ -15,4 +15,14 @@ public class SuperstructureCommands {
                 Commands.waitSeconds(0.75),
                 Commands.parallel(kicker.runKicker(), spindexer.spinCommand())));
   }
+
+  public static Command shootCalculatedCommand(
+      Shooter shooter, Kicker kicker, Spindexer spindexer) {
+    return shooter
+        .runShootCalculatedCommand()
+        .alongWith(
+            Commands.sequence(
+                Commands.waitSeconds(0.75),
+                Commands.parallel(kicker.runKicker(), spindexer.spinCommand())));
+  }
 }

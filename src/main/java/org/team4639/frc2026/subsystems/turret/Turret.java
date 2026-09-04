@@ -89,6 +89,8 @@ public class Turret extends SubsystemBase {
             double pidOutput = turretPIDController.calculate(tx, 0.0);
             pidOutput = Math.max(-10.0, Math.min(10.0, pidOutput));
             motor.setControl(turretVoltageControl.withOutput(pidOutput));
+          } else {
+
           }
         });
   }

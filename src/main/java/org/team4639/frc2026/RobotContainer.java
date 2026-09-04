@@ -153,6 +153,10 @@ public class RobotContainer {
         .whileTrue(SuperstructureCommands.shootCommand(shooter, kicker, spindexer));
     controller.rightTrigger().whileFalse(shooter.stopShooterCommand());
 
+    controller
+        .leftTrigger()
+        .whileTrue(SuperstructureCommands.shootCalculatedCommand(shooter, kicker, spindexer));
+
     controller.x().onTrue(extension.extendToEnd());
     controller.y().onTrue(extension.retractToEnd());
     controller.a().onTrue(rollers.runIntakeCommand());
@@ -160,7 +164,7 @@ public class RobotContainer {
     controller.povRight().whileTrue(turret.moveRight());
     controller.povLeft().whileTrue(turret.moveLeft());
     controller.rightStick().onTrue(extension.home());
-  
+
     controller.rightBumper().whileTrue(turret.centerAprilTag());
   }
 
