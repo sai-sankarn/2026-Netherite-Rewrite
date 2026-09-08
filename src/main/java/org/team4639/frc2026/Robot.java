@@ -127,7 +127,7 @@ public class Robot extends LoggedRobot {
     }
 
     if (DriverStation.isEnabled() && !intakeHomed) {
-      CommandScheduler.getInstance().schedule(robotContainer.extension.home());
+      CommandScheduler.getInstance().schedule(robotContainer.extension.homeIn());
       intakeHomed = true;
     }
   }

@@ -151,13 +151,13 @@ public class RobotContainer {
     controller
         .rightTrigger()
         .whileTrue(SuperstructureCommands.shootCommand(shooter, kicker, spindexer));
-    controller.x().onTrue(extension.extendToEnd());
-    controller.y().onTrue(extension.retractToEnd());
+    controller.x().onTrue(extension.homeOut());
+    controller.y().onTrue(extension.homeIn().alongWith(rollers.stopIntakeCommand()));
     controller.a().onTrue(rollers.runIntakeCommand());
     controller.b().onTrue(rollers.stopIntakeCommand());
     controller.povRight().whileTrue(turret.moveRight());
     controller.povLeft().whileTrue(turret.moveLeft());
-    controller.rightStick().onTrue(extension.home());
+    controller.rightStick().onTrue(extension.homeIn());
   }
 
   /**
@@ -169,3 +169,4 @@ public class RobotContainer {
     return autoChooser.get();
   }
 }
+

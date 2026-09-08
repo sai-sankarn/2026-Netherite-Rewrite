@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.team4639.frc2026.RobotState;
 import org.team4639.frc2026.util.PortConfiguration;
 import org.team4639.lib.util.PhoenixUtil;
 
@@ -81,14 +82,29 @@ public class Extension extends SubsystemBase {
     }
   }
 
-  public Command home() {
-    return Commands.run(this::retract, this)
-        .until(() -> getCurrent() >= 50)
-        .withTimeout(3.0)
+  public Command homeOut() {
+    return Commands.run(this::extend, this)
+        .until(() -> getCurrent() >= 15)
+        .withTimeout(2.0)
         .andThen(
             Commands.runOnce(
                 () -> {
                   stop();
+                  RobotState.getInstance().setExtended(true);
+                  extensionMotor.setPosition(0.0);
+                },
+                this));
+  }
+
+  public Command homeIn() {
+    return Commands.run(this::retract, this)
+        .until(() -> getCurrent() >= 15)
+        .withTimeout(2.0)
+        .andThen(
+            Commands.runOnce(
+                () -> {
+                  stop();
+                  RobotState.getInstance().setExtended(false);
                   extensionMotor.setPosition(0.0);
                 },
                 this));
@@ -150,7 +166,6 @@ public class Extension extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Extension Position", this.getPosition());
     SmartDashboard.putNumber("Extension Goal Difference", getPosition() - EXTENDED_POSITION);
-    SmartDashboard.putBoolean(
-        "Extended", Math.abs(getPosition() - EXTENDED_POSITION) < POSITION_TOLERANCE);
+    SmartDashboard.putBoolean(("Extended"), RobotState.getInstance().isExtended());
   }
 }

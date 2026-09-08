@@ -2,6 +2,7 @@ package org.team4639.frc2026.subsystems.kicker;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.team4639.frc2026.util.PortConfiguration;
 
@@ -10,6 +11,7 @@ public class Kicker extends SubsystemBase {
 
   public Kicker(PortConfiguration ports) {
     motor = new TalonFX(ports.KickerMotorID.getDeviceNumber());
+    setDefaultCommand(Commands.runOnce(() -> motor.setVoltage(0), this));
   }
 
   public Command runKicker() {
