@@ -157,7 +157,9 @@ public class RobotContainer {
     controller.b().onTrue(rollers.stopIntakeCommand());
     controller.povRight().whileTrue(turret.moveRight());
     controller.povLeft().whileTrue(turret.moveLeft());
-    controller.rightStick().onTrue(extension.homeIn());
+    controller.rightStick().onTrue(extension.home());
+  
+    controller.rightBumper().whileTrue(turret.centerAprilTag());
   }
 
   /**
