@@ -25,8 +25,6 @@ import edu.wpi.first.networktables.TimestampedDoubleArray;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.team4639.lib.util.LimelightHelpers.LimelightResults;
-import org.team4639.lib.util.LimelightHelpers.PoseEstimate;
 
 /**
  * LimelightHelpers provides static methods and classes for interfacing with Limelight vision

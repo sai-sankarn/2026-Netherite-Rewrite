@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.team4639.frc2026.commands.DriveCommands;
-import org.team4639.frc2026.commands.SuperstructureCommands;
 import org.team4639.frc2026.constants.ports.Netherite;
 import org.team4639.frc2026.generated.TunerConstants;
 import org.team4639.frc2026.subsystems.drive.Drive;
@@ -148,18 +147,21 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    controller
-        .rightTrigger()
-        .whileTrue(SuperstructureCommands.shootCommand(shooter, kicker, spindexer));
-    controller.x().onTrue(extension.homeOut());
-    controller.y().onTrue(extension.homeIn().alongWith(rollers.stopIntakeCommand()));
-    controller.a().onTrue(rollers.runIntakeCommand());
-    controller.b().onTrue(rollers.stopIntakeCommand());
+    // controller
+    //     .rightTrigger()
+    //     .whileTrue(SuperstructureCommands.shootCommand(shooter, kicker, spindexer));
+    // controller.x().onTrue(extension.homeOut());
+    // controller.y().onTrue(extension.homeIn().alongWith(rollers.stopIntakeCommand()));
+    // controller.a().onTrue(rollers.runIntakeCommand());
+    // controller.b().onTrue(rollers.stopIntakeCommand());
     controller.povRight().whileTrue(turret.moveRight());
     controller.povLeft().whileTrue(turret.moveLeft());
-    controller.rightStick().onTrue(extension.home());
-  
     controller.rightBumper().whileTrue(turret.centerAprilTag());
+
+    controller.x().whileTrue(shooter.forwardQuasistaticCommand());
+    controller.y().whileTrue(shooter.backwardQuasistaticCommand());
+    controller.a().whileTrue(shooter.forwardDynamicCommand());
+    controller.b().whileTrue(shooter.backwardDynamicCommand());
   }
 
   /**
@@ -171,4 +173,3 @@ public class RobotContainer {
     return autoChooser.get();
   }
 }
-
