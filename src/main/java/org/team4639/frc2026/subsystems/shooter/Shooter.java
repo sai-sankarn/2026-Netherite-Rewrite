@@ -1,9 +1,5 @@
 package org.team4639.frc2026.subsystems.shooter;
 
-import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.Second;
-import static edu.wpi.first.units.Units.Volts;
-
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -19,6 +15,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import org.littletonrobotics.junction.Logger;
 import org.team4639.frc2026.util.PortConfiguration;
 import org.team4639.lib.util.LoggedTunableNumber;
+
+import static edu.wpi.first.units.Units.*;
 
 public class Shooter extends SubsystemBase {
   private final SparkFlex leftMotor;
@@ -36,11 +34,9 @@ public class Shooter extends SubsystemBase {
 
   private LoggedTunableNumber setpoint = new LoggedTunableNumber("Shooter Setpoint");
 
-  private double volts = 4;
-
   public Shooter(PortConfiguration ports) {
     leftMotor = new SparkFlex(ports.shooterMotorLeftID.getDeviceNumber(), MotorType.kBrushless);
-    rightMotor = new SparkFlex(30, MotorType.kBrushless);
+    rightMotor = new SparkFlex(ports.shooterMotorRightID.getDeviceNumber(), MotorType.kBrushless);
 
     config
         .signals
@@ -57,8 +53,6 @@ public class Shooter extends SubsystemBase {
 
     leftMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    SmartDashboard.putNumber("Shooter Volts", volts);
-
     sysIdRoutine =
         new SysIdRoutine(
             new SysIdRoutine.Config(
@@ -73,7 +67,7 @@ public class Shooter extends SubsystemBase {
                       .voltage(Volts.of(rightMotor.getAppliedOutput() * rightMotor.getBusVoltage()))
                       .angularPosition(Rotations.of(rightMotor.getEncoder().getPosition()))
                       .angularVelocity(
-                          Rotations.per(Second).of(rightMotor.getEncoder().getVelocity()));
+                          Rotations.per(Minute).of(rightMotor.getEncoder().getVelocity()));
                   Logger.recordOutput(getName(), 0);
                 },
                 this));
@@ -87,9 +81,10 @@ public class Shooter extends SubsystemBase {
   }
 
   public void periodic() {
-    volts = SmartDashboard.getNumber("Shooter Volts", 0);
-    config.closedLoop.feedForward.sva(kS.getAsDouble(), kV.getAsDouble(), kA.getAsDouble());
-    config.closedLoop.p(kP.getAsDouble());
+//    config.closedLoop.feedForward.sva(kS.getAsDouble(), kV.getAsDouble(), kA.getAsDouble());
+//    config.closedLoop.p(kP.getAsDouble());
+//    leftMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+//    rightMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   // public Command runShooterCommand() {
